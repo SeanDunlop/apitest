@@ -23,7 +23,7 @@ namespace apitest.Controllers
         }
 
         [HttpGet]
-        [Route("/")]
+        [Route("/weather")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();

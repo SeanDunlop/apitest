@@ -20,7 +20,7 @@ namespace apitest.Controllers
         }
 
         [HttpGet]
-        [Route("/")]
+        [Route("/test")]
         public String Get()
         {
             var rng = new Random();
