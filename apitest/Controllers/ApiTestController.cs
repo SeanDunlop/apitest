@@ -26,5 +26,12 @@ namespace apitest.Controllers
             var rng = new Random();
             return "This is a neat api";
         }
+
+        [HttpGet]
+        [Route("/test1")]
+        public String testCall(int request) 
+        {
+            return request + "Was Sent";
+        }
     }
 }
