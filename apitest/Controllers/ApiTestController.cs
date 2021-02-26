@@ -35,7 +35,7 @@ namespace apitest.Controllers
         [Route("/test1")]
         public String testCall(string request) 
         {
-            return request + "Was Sent";
+            return (request*1000).toString();
         }
         /*
         // POST: api/TodoItems
