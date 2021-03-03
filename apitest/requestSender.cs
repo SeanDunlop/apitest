@@ -9,33 +9,45 @@ using System;
 using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
+using apitest.Models;
 
 namespace apitest
 {
     public class requestSender
     {
         /*
+        
         static void Main(string[] args) 
         {
-            
 
-            postrequest request = new postrequest("Test Request");
-            var json = JsonConvert.SerializeObject(request);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var db = new ScheduleContext())
+            {
+                // Create and save a new Blog
+                Console.Write("Enter a name for a new Device: ");
+                var name = Console.ReadLine();
 
-            var url = "https://localhost:44352/test1";
+                var device = new Device{ Name = name };
+                db.devices.Add(device);
+                db.SaveChanges();
 
-            // List all Names.    
-            //HttpResponseMessage response = client.GetAsync("api/Values").Result;  // Blocking call!    
-            //HttpResponseMessage response = client.GetAsync("api/Values").Result;  // Blocking call!    
-            using var client = new HttpClient();
+                // Display all Blogs from the database
+                var query = from b in db.devices
+                            orderby b.Name
+                            select b;
 
-            var response =  client.PostAsync(url, data);
+                Console.WriteLine("All blogs in the database:");
+                foreach (var item in query)
+                {
+                    Console.WriteLine(item.Name);
+                }
 
-            string result = response.Result.ToString();
-            Console.WriteLine(result);
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
 
-        }
-        */
+
+        
+       
+        } */
     }
 }
