@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apitest.Models;
-using System.Data.Entity;
+//using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Azure; 
-
-
+using Microsoft.Azure;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 namespace apitest.Controllers
 {
     [Route("api/Schedules")]
@@ -16,17 +16,36 @@ namespace apitest.Controllers
     public class ScheduleController : ControllerBase
     {
         private readonly ScheduleContext _context;
+        private IConfiguration _configuration;
 
-        public ScheduleController() 
+        public ScheduleController(IConfiguration configuration) 
         {
-            _context = new ScheduleContext(CloudConfigurationManager.GetSetting("Database"));
-            //_context = new ScheduleContext("Server=tcp:luxo-server.database.windows.net,1433;Initial Catalog=luxo-db;Persist Security Info=False;User ID=luxo;Password=P1x@r123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            _configuration = configuration;
+
+            String conn;
+            try { conn = _configuration.GetConnectionString("Database"); }
+            catch (Exception e) 
+            {
+                conn = "the connection string failed";
+                throw new Exception("string was " + conn);
+            }
+            //
+            _context = new ScheduleContext(conn);
+            
         }
 
         // get all of the schedules
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> getSchedules() 
         {
+
+            Console.WriteLine("Getting Schedules");
+            Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 } };
+            List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
+            newperiods.Add(new SchedulePeriod { startTime = DateTime.Now, endTime = DateTime.MaxValue, intensity = 2 });
+            newperiods.Add(new SchedulePeriod { startTime = DateTime.Now, endTime = DateTime.MaxValue, intensity = 3 });
+            newsched.periods = newperiods;
+            Console.WriteLine(JsonSerializer.Serialize(newsched));
             return await _context.schedules.Select(x => x).ToListAsync();
         }
 
@@ -34,14 +53,24 @@ namespace apitest.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Schedule>> GetSchedule(long id)
         {
-            var schedule = await _context.schedules.FindAsync(id);
+            //var x = _context.schedules.Include<SchedulePeriod>(sp => sp.periods)
+            //                          .FindAsync(id);
+            //namespace 
+            var test = _context.schedules.Include("periods");
+
+            var schedule = test.Where(x => x.ScheduleId == id).ToArray<Schedule>();
 
             if (schedule == null)
             {
                 return NotFound();
             }
+            if (schedule.Length > 1) 
+            {
+                Console.WriteLine("More than one result found");
+                return Problem("More than one result was found");
+            }
 
-            return schedule;
+            return schedule[0];
         }
 
         // update an existing schedule
@@ -61,8 +90,11 @@ namespace apitest.Controllers
             }
 
             newschedule.name = schedule.name;
-            newschedule.startTime = schedule.startTime;
-            newschedule.endTime = schedule.endTime;
+            newschedule.periods = schedule.periods;
+            newschedule.room = schedule.room;
+
+            //newschedule.startTime = schedule.startTime;
+            //newschedule.endTime = schedule.endTime;
             //newschedule.device = schedule.device;
 
             try
@@ -87,8 +119,8 @@ namespace apitest.Controllers
             var newSchedule = new Schedule
             {
                 name = schedule.name,
-                startTime = schedule.startTime,
-                endTime = schedule.endTime,
+                periods = schedule.periods,
+                room= schedule.room,
                 //device = schedule.device
 
             };

@@ -7,10 +7,13 @@ namespace apitest.Models
 {
     public class Schedule
     {
-        public int ScheduleId { get; set; }
-        public int startTime { get; set; }
-        public int endTime { get; set; }
-        public string name { get; set; }
-        //public virtual Device device { get; set; }
+        public int ScheduleId { get; set; } // id for the table
+        //public int startTime { get; set; } // ignore this in future
+        //public int endTime { get; set; } // ignore this in future
+        public string name { get; set; } // name of the schedule
+        public List<SchedulePeriod> periods { get; set; }
+        public RoomConfig room { get; set; }
+
+
     }
 }

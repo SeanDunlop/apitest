@@ -33,9 +33,12 @@ namespace apitest.Controllers
 
         [HttpGet]
         [Route("/test1")]
-        public String testCall(string request) 
+        public String testCall(int request) 
         {
-            return (request*1000).toString();
+            //System.Diagnostics.Trace.TraceError("SOMEBODY CALLED TEST1");
+            //throw new Exception("SOMEBODY CALLED TEST1");
+            return (request*1000).ToString();
+            
         }
         /*
         // POST: api/TodoItems

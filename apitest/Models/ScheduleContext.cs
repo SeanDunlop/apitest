@@ -10,6 +10,8 @@ namespace apitest.Models
         public ScheduleContext(string connection) : base(connection)
         {
         }
+
+        public ScheduleContext() { }
         public DbSet<Device> devices { get; set; }
         public DbSet<Schedule> schedules { get; set; }
 

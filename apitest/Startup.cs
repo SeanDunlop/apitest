@@ -41,6 +41,8 @@ namespace apitest
                 app.UseDeveloperExceptionPage();
             }
 
+            //app.UseExceptionHandler(); //  bad
+
             app.UseSwagger();
 
             app.UseHttpsRedirection();
