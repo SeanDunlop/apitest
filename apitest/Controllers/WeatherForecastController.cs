@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace apitest.Controllers
 {
+    /*
+     This shouldn't really be getting used but i'm gonna leave it in for now
+     */
     [ApiController]
     public class WeatherForecastController : ControllerBase
     {

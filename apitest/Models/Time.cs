@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace apitest.Models
 {
-    public class Device
+    public class Time
     {
-        public int DeviceId { get; set; }
-        public string Name { get; set; }
-
+        public int hours { get; set; }
+        public int minutes { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace apitest.Migrations
+﻿/*
+ * this is an old migration file that needed to go away so i could update remote db
+ * I don't want to delete it because entity framework is black magic already
+namespace apitest.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -20,3 +23,4 @@
         }
     }
 }
+*/

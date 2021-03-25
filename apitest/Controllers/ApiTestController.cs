@@ -12,10 +12,7 @@ namespace apitest.Controllers
     public class ApiTestController : ControllerBase
     {
 
-
         private readonly ILogger<WeatherForecastController> _logger;
-
-        //private readonly TodoContext _context;
 
         public ApiTestController(ILogger<WeatherForecastController> logger)
         {
@@ -35,31 +32,10 @@ namespace apitest.Controllers
         [Route("/test1")]
         public String testCall(int request) 
         {
-            //System.Diagnostics.Trace.TraceError("SOMEBODY CALLED TEST1");
             //throw new Exception("SOMEBODY CALLED TEST1");
             return (request*1000).ToString();
             
         }
-        /*
-        // POST: api/TodoItems
-        [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
-        {
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
-        }
-
-
-        [HttpGet("{id}")]
-        [Route("/api/ApiTest/route")]
-        public async IActionResult testRoute(string id)
-        {
-            return "id was " + id;
-        }
-        */
 
         [HttpPost]
         [Route("/posttest")]

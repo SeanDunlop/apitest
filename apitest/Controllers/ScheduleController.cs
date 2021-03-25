@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apitest.Models;
-//using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using System.Data.Entity;
 namespace apitest.Controllers
 {
     [Route("api/Schedules")]
@@ -40,12 +40,14 @@ namespace apitest.Controllers
         {
 
             Console.WriteLine("Getting Schedules");
+            
             Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 } };
             List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
-            newperiods.Add(new SchedulePeriod { startTime = DateTime.Now, endTime = DateTime.MaxValue, intensity = 2 });
-            newperiods.Add(new SchedulePeriod { startTime = DateTime.Now, endTime = DateTime.MaxValue, intensity = 3 });
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours=8, minutes=22}, endTime = new Time { hours = 9, minutes =35 }, intensity = 2 });
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 }, intensity = 2 });
             newsched.periods = newperiods;
             Console.WriteLine(JsonSerializer.Serialize(newsched));
+            
             return await _context.schedules.Select(x => x).ToListAsync();
         }
 
@@ -53,18 +55,18 @@ namespace apitest.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Schedule>> GetSchedule(long id)
         {
-            //var x = _context.schedules.Include<SchedulePeriod>(sp => sp.periods)
-            //                          .FindAsync(id);
-            //namespace 
+
             var test = _context.schedules.Include("periods");
 
+            // TODO find a way to make this async
             var schedule = test.Where(x => x.ScheduleId == id).ToArray<Schedule>();
 
             if (schedule == null)
             {
                 return NotFound();
             }
-            if (schedule.Length > 1) 
+            if (schedule.Length > 1) // this means that theres several schedules with the same id which 
+                                     //SHOULD be impossible with the database
             {
                 Console.WriteLine("More than one result found");
                 return Problem("More than one result was found");
@@ -82,7 +84,6 @@ namespace apitest.Controllers
                 return BadRequest();
             }
 
-            //_context.Entry(todoItemDTO).State = EntityState.Modified;
             var newschedule = await _context.schedules.FindAsync(id);
             if (newschedule == null)
             {
@@ -92,10 +93,6 @@ namespace apitest.Controllers
             newschedule.name = schedule.name;
             newschedule.periods = schedule.periods;
             newschedule.room = schedule.room;
-
-            //newschedule.startTime = schedule.startTime;
-            //newschedule.endTime = schedule.endTime;
-            //newschedule.device = schedule.device;
 
             try
             {
@@ -121,7 +118,6 @@ namespace apitest.Controllers
                 name = schedule.name,
                 periods = schedule.periods,
                 room= schedule.room,
-                //device = schedule.device
 
             };
 

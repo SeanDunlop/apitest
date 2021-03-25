@@ -17,23 +17,6 @@ namespace apitest
 
         public static void Main(string[] args)
         {
-            /*
-            var newSchedule = new Schedule
-            {
-                ScheduleId = 1,
-                name = "test schedule",
-                startTime = 100,
-                endTime = 200,
-                device = new Device 
-                {
-                    DeviceId = 1,
-                    Name = "test device"
-                }
-
-            };
-
-            Console.WriteLine(JsonSerializer.Serialize(newSchedule));
-            */
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace apitest.Models
 {
+    // Describes the non-variable aspects of a room that we'll need to calculate duration/intensity and anything else
     public class RoomConfig
     {
         public int roomId { get; set; }

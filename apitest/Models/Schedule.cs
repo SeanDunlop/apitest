@@ -8,11 +8,9 @@ namespace apitest.Models
     public class Schedule
     {
         public int ScheduleId { get; set; } // id for the table
-        //public int startTime { get; set; } // ignore this in future
-        //public int endTime { get; set; } // ignore this in future
         public string name { get; set; } // name of the schedule
-        public List<SchedulePeriod> periods { get; set; }
-        public RoomConfig room { get; set; }
+        public List<SchedulePeriod> periods { get; set; } // set of periods of time for the lights to be on
+        public RoomConfig room { get; set; } // model of the room itself (size, height, etc.)
 
 
     }
