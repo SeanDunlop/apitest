@@ -10,7 +10,7 @@ namespace apitest.Models
         public int SchedulePeriodId { get; set; }
         public Time startTime { get; set; }
         public Time endTime { get; set; }
-        public int intensity { get; set; }
+        public int duration { get; set; }
 
     }
 }

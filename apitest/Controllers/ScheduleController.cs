@@ -43,8 +43,8 @@ namespace apitest.Controllers
             
             Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 } };
             List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
-            newperiods.Add(new SchedulePeriod { startTime = new Time { hours=8, minutes=22}, endTime = new Time { hours = 9, minutes =35 }, intensity = 2 });
-            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 }, intensity = 2 });
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours=8, minutes=22}, endTime = new Time { hours = 9, minutes =35 }});
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 }});
             newsched.periods = newperiods;
             Console.WriteLine(JsonSerializer.Serialize(newsched));
             
@@ -93,6 +93,11 @@ namespace apitest.Controllers
             newschedule.name = schedule.name;
             newschedule.periods = schedule.periods;
             newschedule.room = schedule.room;
+            newschedule.delay = schedule.delay;
+            newschedule.DeviceId = schedule.DeviceId;
+            newschedule.intensity = schedule.intensity;
+            newschedule.lightPort = schedule.lightPort;
+            newschedule.sensorPort = schedule.sensorPort;
 
             try
             {
@@ -117,9 +122,14 @@ namespace apitest.Controllers
             {
                 name = schedule.name,
                 periods = schedule.periods,
-                room= schedule.room,
+                room = schedule.room,
+                delay = schedule.delay,
+                DeviceId = schedule.DeviceId,
+                intensity = schedule.intensity,
+                lightPort = schedule.lightPort,
+                sensorPort = schedule.sensorPort
 
-            };
+        };
 
             _context.schedules.Add(newSchedule);
             await _context.SaveChangesAsync();
