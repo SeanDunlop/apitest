@@ -29,19 +29,16 @@ namespace apitest.Controllers
                 conn = "the connection string failed";
                 throw new Exception("string was " + conn);
             }
-            //
-            _context = new ScheduleContext(conn);
-            
+            _context = new ScheduleContext(conn);  
         }
 
         // get all of the schedules
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> getSchedules() 
         {
-
             Console.WriteLine("Getting Schedules");
             
-            Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 } };
+            Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 }, delay=100, sensorPort=2,lightPort=3, DeviceId=12, intensity=255 };
             List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
             newperiods.Add(new SchedulePeriod { startTime = new Time { hours=8, minutes=22}, endTime = new Time { hours = 9, minutes =35 }});
             newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 }});
