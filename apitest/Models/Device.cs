@@ -10,5 +10,8 @@ namespace apitest.Models
         public int DeviceId { get; set; }
         public string Name { get; set; }
 
+        public RoomConfig room { get; set; } // model of the room itself (size, height, etc.)
+
+        public List<Schedule> schedules { get; set; }
     }
 }

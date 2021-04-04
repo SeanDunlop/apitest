@@ -20,6 +20,7 @@ namespace apitest.Controllers
 
         public ScheduleController(IConfiguration configuration) 
         {
+            //throw new Exception("Sched Controller Exists");
             _configuration = configuration;
 
             String conn;
@@ -37,14 +38,7 @@ namespace apitest.Controllers
         public async Task<ActionResult<IEnumerable<Schedule>>> getSchedules() 
         {
             Console.WriteLine("Getting Schedules");
-            
-            Schedule newsched = new Schedule {name = "testsched", room = new RoomConfig {roomWidth=2, roomHeight=4 }, delay=100, sensorPort=2,lightPort=3, DeviceId=12, intensity=255 };
-            List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
-            newperiods.Add(new SchedulePeriod { startTime = new Time { hours=8, minutes=22}, endTime = new Time { hours = 9, minutes =35 }});
-            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 }});
-            newsched.periods = newperiods;
-            Console.WriteLine(JsonSerializer.Serialize(newsched));
-            
+            printExampleJson();
             return await _context.schedules.Select(x => x).ToListAsync();
         }
 
@@ -53,7 +47,7 @@ namespace apitest.Controllers
         public async Task<ActionResult<Schedule>> GetSchedule(long id)
         {
 
-            var test = _context.schedules.Include("periods");
+            var test = _context.schedules.Include("periods").Include("lightConfigs");
 
             // TODO find a way to make this async
             var schedule = test.Where(x => x.ScheduleId == id).ToArray<Schedule>();
@@ -89,12 +83,13 @@ namespace apitest.Controllers
 
             newschedule.name = schedule.name;
             newschedule.periods = schedule.periods;
-            newschedule.room = schedule.room;
+            //newschedule.room = schedule.room;
             newschedule.delay = schedule.delay;
-            newschedule.DeviceId = schedule.DeviceId;
+            //newschedule.DeviceId = schedule.DeviceId;
             newschedule.intensity = schedule.intensity;
-            newschedule.lightPort = schedule.lightPort;
-            newschedule.sensorPort = schedule.sensorPort;
+            //newschedule.lightPort = schedule.lightPort;
+            //newschedule.sensorPort = schedule.sensorPort;
+            newschedule.lightConfigs = schedule.lightConfigs;
 
             try
             {
@@ -110,6 +105,27 @@ namespace apitest.Controllers
 
             return NoContent();
         }
+        /*
+        [Route("api/Schedules")]
+        [HttpPost]
+        public async Task<ActionResult<Device>> PostDevice(Device device)
+        {
+            
+            var newDevice = new Device
+            {
+                Name = device.name,
+                periods = schedule.periods,
+                delay = schedule.delay,
+                intensity = schedule.intensity,
+                lightConfigs = schedule.lightConfigs
+            };
+            
+            _context.devices.Add(device);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("created device", device);
+        }
+        */
 
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> PostSchedule(Schedule schedule)
@@ -119,12 +135,9 @@ namespace apitest.Controllers
             {
                 name = schedule.name,
                 periods = schedule.periods,
-                room = schedule.room,
                 delay = schedule.delay,
-                DeviceId = schedule.DeviceId,
                 intensity = schedule.intensity,
-                lightPort = schedule.lightPort,
-                sensorPort = schedule.sensorPort
+                lightConfigs = schedule.lightConfigs
 
         };
 
@@ -153,5 +166,26 @@ namespace apitest.Controllers
 
         private bool ScheduleExists(long id) =>
             _context.schedules.Any(e => e.ScheduleId == id);
+
+        private void printExampleJson() 
+        {
+            Schedule newsched = new Schedule { name = "testsched", delay = 100, lightConfigs = { }, intensity = 255 };
+            List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 8, minutes = 22 }, endTime = new Time { hours = 9, minutes = 35 } });
+            newperiods.Add(new SchedulePeriod { startTime = new Time { hours = 13, minutes = 45 }, endTime = new Time { hours = 15, minutes = 21 } });
+            List<LightConfig> lightConfigs = new List<LightConfig>();
+            lightConfigs.Add(new LightConfig(1, 3, 4));
+            lightConfigs.Add(new LightConfig(2, 3, 4));
+            newsched.periods = newperiods;
+            newsched.lightConfigs = lightConfigs;
+
+            Device newDevice = new Device { Name = "RoomDevice", room = new RoomConfig{ roomHeight = 10, roomWidth = 12 }, schedules = { } };
+            newDevice.schedules = new List<Schedule>();
+            newDevice.schedules.Add(newsched);
+
+
+
+            Console.WriteLine(JsonSerializer.Serialize(newDevice));
+        }
     }
 }
