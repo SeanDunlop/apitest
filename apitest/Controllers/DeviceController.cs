@@ -78,7 +78,7 @@ namespace apitest.Controllers
                 Console.WriteLine("More than one result found");
                 return Problem("More than one result was found");
             }
-
+            
             return device[0];
         }
 
