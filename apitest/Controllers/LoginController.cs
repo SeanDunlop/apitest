@@ -9,6 +9,7 @@ using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Data.Entity;
+using apitest.Common;
 
 namespace apitest.Controllers
 {
@@ -47,13 +48,20 @@ namespace apitest.Controllers
                 Session s = new Session();
                 s.UserId = user.First().UserId;
                 s.SessionGuid = Guid.NewGuid().ToString();
-                s.Active = true;
-                TimeSpan delay = new TimeSpan(0, 30, 0);
-                s.Timeout = DateTime.UtcNow + delay;
+                s.Timeout = DateTime.UtcNow.AddMinutes(30);
                 _context.sessions.Add(s);
                 await _context.SaveChangesAsync();
                 return s.SessionGuid;
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<string>> logout(string token)
+        {
+            var session = _context.sessions.Where(x => x.SessionGuid == token);
+            session.First().Timeout = DateTime.UtcNow.AddHours(-1);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }

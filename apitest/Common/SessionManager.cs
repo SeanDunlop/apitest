@@ -23,8 +23,9 @@ namespace apitest.Common
             }
             else
             {
-                if (token.First().Active)
+                if (DateTime.Compare(token.First().Timeout, DateTime.UtcNow) > 0)
                 {
+                    token.First().Timeout = DateTime.UtcNow.AddMinutes(30);
                     return token.First().UserId;
                 }
                 else
