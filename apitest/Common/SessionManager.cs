@@ -14,9 +14,24 @@ namespace apitest.Common
 {
     public class SessionManager
     {
-        public bool isValid(String sessionId)
+        public int isValid(ScheduleContext c, String sessionToken)
         {
-
+            var token = c.sessions.Where(x => x.SessionGuid == sessionToken);
+            if(token == null)
+            {
+                return 0;
+            }
+            else
+            {
+                if (token.First().Active)
+                {
+                    return token.First().UserId;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
     }
 }

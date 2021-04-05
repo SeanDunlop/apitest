@@ -45,8 +45,9 @@ namespace apitest.Controllers
             else
             {
                 Session s = new Session();
-                s.userId = user.First().UserId;
+                s.UserId = user.First().UserId;
                 s.SessionGuid = Guid.NewGuid().ToString();
+                s.Active = true;
                 TimeSpan delay = new TimeSpan(0, 30, 0);
                 s.Timeout = DateTime.UtcNow + delay;
                 _context.sessions.Add(s);
