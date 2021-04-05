@@ -10,7 +10,9 @@ namespace apitest.Models
         
         public int SessionId { get; set; }
 
-        public String SessionGuid { get; set; }
+        public int UserId { get; set; }
+        public string SessionGuid { get; set; }
+        public bool Active { get; set; }
         public DateTime Timeout { get; set; }
     }
 }
