@@ -9,6 +9,8 @@ namespace apitest.Models
     {
         public int DeviceId { get; set; }
         public string Name { get; set; }
+        public string DeviceGuid { get; set; } //Never edited by user, doesn't need to be visible at all
+        public int Owner { get; set; } //Never edited by user, doesn't need to be visible
 
         public RoomConfig room { get; set; } // model of the room itself (size, height, etc.)
 
