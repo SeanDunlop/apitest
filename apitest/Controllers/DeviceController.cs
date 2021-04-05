@@ -78,7 +78,7 @@ namespace apitest.Controllers
                 Console.WriteLine("More than one result found");
                 return Problem("More than one result was found");
             }
-
+            
             return device[0];
         }
 
@@ -90,7 +90,12 @@ namespace apitest.Controllers
                 return BadRequest();
             }
 
-            var newDevice = await _context.devices.FindAsync(id);
+            //var newDevice = await _context.devices.FindAsync(id);
+            var test = _context.devices.Include("schedules.periods").Include("schedules.lightConfigs.sensorPorts");
+
+            // TODO find a way to make this async
+            var result = test.Where(x => x.DeviceId == id).ToArray<Device>();
+            var newDevice = result[0];
             if (newDevice == null)
             {
                 return NotFound();
