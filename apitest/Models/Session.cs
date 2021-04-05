@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace apitest.Models
 {
-    public class Sessions
+    public class Session
     {
         
-        public int SessionID { get; set; }
+        public int SessionId { get; set; }
 
         public String SessionGuid { get; set; }
         public DateTime Timeout { get; set; }

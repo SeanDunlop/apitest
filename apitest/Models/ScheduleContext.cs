@@ -14,7 +14,7 @@ namespace apitest.Models
         public ScheduleContext() { }
         public DbSet<Device> devices { get; set; }
         public DbSet<Schedule> schedules { get; set; }
-        public DbSet<Credentials> creds { get; set; }
-        public DbSet<Sessions> sessions { get; set; }
+        public DbSet<User> creds { get; set; }
+        public DbSet<Session> sessions { get; set; }
     }
 }
