@@ -13,7 +13,7 @@ using apitest.Common;
 
 namespace apitest.Controllers
 {
-    [Route("api/Devices")]
+    [Route("api/SecureDevices")]
     [ApiController]
     public class SecureDeviceController : ControllerBase
     {
