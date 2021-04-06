@@ -86,11 +86,14 @@ namespace apitest.Controllers
                     }
                 }
                 List<(int, int)> pairs = new List<(int,int)>();
-                foreach(LightConfig l in s.lightConfigs) { 
+                foreach(LightConfig l in s.lightConfigs) {
+                    pairs.Add((l.lightPort, l.sensorPorts[0].port));
+                    /*
                     foreach(SensorPort sp in l.sensorPorts)
                     {
                         pairs.Add((l.lightPort, sp.port));
                     }
+                    //*/
                 }
                 foreach((int,int) i in pairs)
                 {
