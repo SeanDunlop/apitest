@@ -12,14 +12,14 @@ using System.Data.Entity;
 using apitest.Common;
 namespace apitest.Controllers
 {
-    [Route("api/ArduinoRegister")]
+    [Route("api/ArduinoSchedule")]
     [ApiController]
-    public class ArduinoController : ControllerBase
+    public class ArduinoScheduleController : ControllerBase
     {
         private readonly ScheduleContext _context;
         private IConfiguration _configuration;
 
-        public ArduinoController(IConfiguration configuration)
+        public ArduinoScheduleController(IConfiguration configuration)
         {
 
             _configuration = configuration;
@@ -33,9 +33,9 @@ namespace apitest.Controllers
             }
             _context = new ScheduleContext(conn);
         }
-
+        /*
         [HttpGet]
-        public string register(string username, string password)
+        public Task<ActionResult<ArduinoSchedule>> get(string arduinoId)
         {
             var user = _context.creds.Where(x => x.Username == username && x.Password == password);
             if (user == null)
@@ -54,10 +54,11 @@ namespace apitest.Controllers
                 };
 
                 _context.devices.Add(newDevice);
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
 
                 return guid;
             }
         }
+        //*/
     }
 }
