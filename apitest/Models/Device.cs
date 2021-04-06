@@ -15,5 +15,8 @@ namespace apitest.Models
         public RoomConfig room { get; set; } // model of the room itself (size, height, etc.)
 
         public List<Schedule> schedules { get; set; }
+
+        public int xpos { get; set; }
+        public int ypos { get; set; }
     }
 }

@@ -67,6 +67,8 @@ namespace apitest.Controllers
                     Name = device.Name,
                     room = device.room,
                     schedules = device.schedules,
+                    xpos = device.xpos,
+                    ypos = device.ypos
                 };
 
                 _context.devices.Add(newDevice);
@@ -137,7 +139,8 @@ namespace apitest.Controllers
                 newDevice.Name = device.Name;
                 newDevice.room = device.room;
                 newDevice.schedules = device.schedules;
-
+                newDevice.xpos = device.xpos;
+                newDevice.ypos = device.ypos;
                 try
                 {
                     await _context.SaveChangesAsync();
