@@ -34,7 +34,7 @@ namespace apitest.Controllers
             }
             _context = new ScheduleContext(conn);
         }
-
+        
         [HttpGet]
         public async Task<ActionResult<string>> login(string username, string hashpass)
         {
