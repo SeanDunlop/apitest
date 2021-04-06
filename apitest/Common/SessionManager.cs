@@ -17,7 +17,7 @@ namespace apitest.Common
         public int isValid(ScheduleContext c, String sessionToken)
         {
             var token = c.sessions.Where(x => x.SessionGuid == sessionToken);
-            if(token == null)
+            if(!token.Any())
             {
                 return 0;
             }

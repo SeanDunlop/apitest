@@ -35,10 +35,10 @@ namespace apitest.Controllers
         }
 
         [HttpGet]
-        public string register(string username, string password)
+        public string register(string username, string hashpass)
         {
-            var user = _context.creds.Where(x => x.Username == username && x.Password == password);
-            if (user == null)
+            var user = _context.creds.Where(x => x.Username == username && x.Password == hashpass);
+            if (!user.Any())
             {
                 return null;
             }
@@ -49,7 +49,7 @@ namespace apitest.Controllers
                     Owner = user.First().UserId,
                     Name = "New Device",
                     DeviceGuid = guid,
-                    room = null,
+                    room = new RoomConfig(),
                     schedules = null,
                 };
 
