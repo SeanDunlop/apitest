@@ -56,7 +56,7 @@ namespace apitest.Controllers
                 return s.SessionGuid;
             }
         }
-
+        /*
         [HttpGet]
         public async Task<ActionResult<string>> logout(string token)
         {
@@ -65,5 +65,6 @@ namespace apitest.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        */
     }
 }
