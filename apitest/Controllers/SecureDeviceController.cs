@@ -39,7 +39,7 @@ namespace apitest.Controllers
         public async Task<ActionResult<IEnumerable<Device>>> getDevices(string token)
         {
             int userId = new SessionManager().isValid(_context, token);
-            if(userId == 0)
+            if (userId == 0)
             {
                 return Forbid();
             }
@@ -49,11 +49,11 @@ namespace apitest.Controllers
                 //printExampleJson();
                 return await _context.devices.Where(x => x.Owner == userId).ToListAsync();
             }
-            
+
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItemDTO>> PostDevice([FromBody] Device device, [FromQuery]string token)
+        public async Task<ActionResult<TodoItemDTO>> PostDevice([FromBody] Device device, [FromQuery] string token)
         {
             int userId = new SessionManager().isValid(_context, token);
             if (userId == 0)
@@ -74,7 +74,7 @@ namespace apitest.Controllers
 
                 return CreatedAtAction(nameof(GetDevice), new { id = newDevice.DeviceId }, newDevice);
             }
-                
+
         }
 
         [HttpGet("{id}")]
@@ -103,14 +103,14 @@ namespace apitest.Controllers
 
                 return device[0];
             }
-                
+
 
             // TODO find a way to make this async
-            
+
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDevice(long id, Device device, string token)
+        [HttpPut]
+        public async Task<IActionResult> UpdateDevice([FromQuery] long id,[FromBody] Device device, [FromQuery] string token)
         {
             int userId = new SessionManager().isValid(_context, token);
             if (userId == 0)
@@ -124,7 +124,11 @@ namespace apitest.Controllers
                     return BadRequest();
                 }
 
-                var newDevice = await _context.devices.FindAsync(id);
+                var test = _context.devices.Include("schedules.periods").Include("schedules.lightConfigs.sensorPorts");
+
+                // TODO find a way to make this async
+                var result = test.Where(x => x.DeviceId == id).ToArray<Device>();
+                var newDevice = result[0];
                 if (newDevice == null)
                 {
                     return NotFound();
