@@ -33,30 +33,74 @@ namespace apitest.Controllers
             }
             _context = new ScheduleContext(conn);
         }
-        /*
+        //*
         [HttpGet]
-        public Task<ActionResult<ArduinoSchedule>> get(string arduinoId)
+        public async Task<ActionResult<ArduinoSchedule>> getSchedule(string arduinoId)
         {
-            var user = _context.creds.Where(x => x.Username == username && x.Password == password);
-            if (user == null)
+            var test = _context.devices.Include("schedules.periods").Include("schedules.lightConfigs.sensorPorts");
+            var device = test.Where(x => x.DeviceGuid == arduinoId).ToArray<Device>();
+
+            if(device == null)
             {
                 return null;
             }
-            else {
-                var guid = Guid.NewGuid().ToString();
-                var newDevice = new Device
+            else
+            {
+                Schedule s = device.First().schedules[0];
+                ArduinoSchedule a = new ArduinoSchedule();
+                int duration = 0;
+                int delay = s.delay;
+                int intensity = s.intensity;
+
+                foreach(SchedulePeriod p in s.periods)
                 {
-                    Owner = user.First().UserId,
-                    Name = "New Device",
-                    DeviceGuid = guid,
-                    room = null,
-                    schedules = null,
-                };
-
-                _context.devices.Add(newDevice);
-                _context.SaveChangesAsync();
-
-                return guid;
+                    int nowHour = DateTime.UtcNow.Hour;
+                    int nowMin = DateTime.UtcNow.Minute;
+                    if(p.startTime.hours == nowHour && p.startTime.minutes < nowMin)
+                    {
+                        if(p.endTime.hours > nowHour)
+                        {
+                            //in this period
+                            duration = p.duration;
+                            break;
+                        }else if(p.endTime.hours == nowHour && p.endTime.minutes > nowMin)
+                        {
+                            //in this period
+                            duration = p.duration;
+                            break;
+                        }
+                    }else if(p.startTime.hours < nowHour)
+                    {
+                        if (p.endTime.hours > nowHour)
+                        {
+                            //in this period
+                            duration = p.duration;
+                            break;
+                        }
+                        else if (p.endTime.hours == nowHour && p.endTime.minutes > nowMin)
+                        {
+                            //in this period
+                            duration = p.duration;
+                            break;
+                        }
+                    }
+                }
+                List<(int, int)> pairs = new List<(int,int)>();
+                foreach(LightConfig l in s.lightConfigs) { 
+                    foreach(SensorPort sp in l.sensorPorts)
+                    {
+                        pairs.Add((l.lightPort, sp.port));
+                    }
+                }
+                foreach((int,int) i in pairs)
+                {
+                    a.delay.Add(delay);
+                    a.duration.Add(duration);
+                    a.intensity.Add(intensity);
+                    a.lights.Add(i.Item1);
+                    a.lights.Add(i.Item2);
+                }
+                return a;
             }
         }
         //*/
