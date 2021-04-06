@@ -98,8 +98,9 @@ namespace apitest.Controllers
                     a.duration.Add(duration);
                     a.intensity.Add(intensity);
                     a.lights.Add(i.Item1);
-                    a.lights.Add(i.Item2);
+                    a.sensors.Add(i.Item2);
                 }
+                a.length = pairs.Count;
                 return a;
             }
         }
