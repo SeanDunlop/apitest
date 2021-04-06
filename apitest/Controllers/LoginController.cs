@@ -13,6 +13,7 @@ using apitest.Common;
 
 namespace apitest.Controllers
 {
+    [Route("api/Login")]
     public class LoginController : ControllerBase
     {
         private readonly ScheduleContext _context;

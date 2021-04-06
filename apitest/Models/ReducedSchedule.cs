@@ -32,8 +32,8 @@ namespace apitest.Models
             }
 
 
-            int hours = DateTime.Now.Hour;
-            int min = DateTime.Now.Minute;
+            int hours = DateTime.UtcNow.Hour;
+            int min = DateTime.UtcNow.Minute;
 
             SchedulePeriod nextPeriod;
             foreach (SchedulePeriod period in sched.periods) // only gives the current period right now

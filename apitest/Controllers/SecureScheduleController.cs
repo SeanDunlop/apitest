@@ -13,40 +13,31 @@ using apitest.Common;
 
 namespace apitest.Controllers
 {
-    [Route("api/Schedules")]
+    [Route("api/SecureSchedules")]
     [ApiController]
     public class SecureScheduleController : ControllerBase
     {
         private readonly ScheduleContext _context;
         private IConfiguration _configuration;
 
-        public SecureScheduleController(IConfiguration configuration) 
+        public SecureScheduleController(IConfiguration configuration)
         {
             //throw new Exception("Sched Controller Exists");
             _configuration = configuration;
 
             String conn;
             try { conn = _configuration.GetConnectionString("Database"); }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 conn = "the connection string failed";
                 throw new Exception("string was " + conn);
             }
-            _context = new ScheduleContext(conn);  
+            _context = new ScheduleContext(conn);
         }
 
         // get all of the schedules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Schedule>>> getSchedules() 
-        {
-            Console.WriteLine("Getting Schedules");
-            printExampleJson();
-            return await _context.schedules.Select(x => x).ToListAsync();
-        }
-
-        // get schedule by id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Schedule>> GetSchedule(long id, string token)
+        public async Task<ActionResult<IEnumerable<Schedule>>> getSchedules(string token)
         {
             int userId = new SessionManager().isValid(_context, token);
             if (userId == 0)
@@ -55,24 +46,35 @@ namespace apitest.Controllers
             }
             else
             {
-                var test = _context.schedules.Include("periods").Include("lightConfigs");
+                Console.WriteLine("Getting Schedules");
+                printExampleJson();
 
-                // TODO find a way to make this async
-                var schedule = test.Where(x => x.ScheduleId == id).ToArray<Schedule>();
-
-                if (schedule == null)
-                {
-                    return NotFound();
-                }
-                if (schedule.Length > 1) // this means that theres several schedules with the same id which 
-                                         //SHOULD be impossible with the database
-                {
-                    Console.WriteLine("More than one result found");
-                    return Problem("More than one result was found");
-                }
-
-                return schedule[0];
+                return await _context.schedules.Select(x => x).ToListAsync();
             }
+        }
+
+        // get schedule by id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Schedule>> GetSchedule(long id)
+        {
+
+            var test = _context.schedules.Include("periods").Include("lightConfigs");
+
+            // TODO find a way to make this async
+            var schedule = test.Where(x => x.ScheduleId == id).ToArray<Schedule>();
+
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+            if (schedule.Length > 1) // this means that theres several schedules with the same id which 
+                                     //SHOULD be impossible with the database
+            {
+                Console.WriteLine("More than one result found");
+                return Problem("More than one result was found");
+            }
+
+            return schedule[0];
         }
 
         // update an existing schedule
@@ -148,7 +150,7 @@ namespace apitest.Controllers
                 intensity = schedule.intensity,
                 lightConfigs = schedule.lightConfigs
 
-        };
+            };
 
             _context.schedules.Add(newSchedule);
             await _context.SaveChangesAsync();
@@ -176,7 +178,7 @@ namespace apitest.Controllers
         private bool ScheduleExists(long id) =>
             _context.schedules.Any(e => e.ScheduleId == id);
 
-        private void printExampleJson() 
+        private void printExampleJson()
         {
             Schedule newsched = new Schedule { name = "testsched", delay = 100, lightConfigs = { }, intensity = 255 };
             List<SchedulePeriod> newperiods = new List<SchedulePeriod>();
@@ -188,7 +190,7 @@ namespace apitest.Controllers
             newsched.periods = newperiods;
             newsched.lightConfigs = lightConfigs;
 
-            Device newDevice = new Device { Name = "RoomDevice", room = new RoomConfig{ roomHeight = 10, roomWidth = 12 }, schedules = { } };
+            Device newDevice = new Device { Name = "RoomDevice", room = new RoomConfig { roomHeight = 10, roomWidth = 12 }, schedules = { } };
             newDevice.schedules = new List<Schedule>();
             newDevice.schedules.Add(newsched);
 
