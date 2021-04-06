@@ -60,7 +60,5 @@ namespace apitest.Controllers
             }
         }
 
-        [HttpGet]
-        public 
     }
 }
