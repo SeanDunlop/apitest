@@ -36,23 +36,23 @@ namespace apitest.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<string>> login(string username, string hashpass)
+        public string login(string username, string hashpass)
         {
             Console.WriteLine("Logging In");
             //printExampleJson();
             var user = _context.creds.Where(x => x.Username == username && x.Password == hashpass);
-            if(user == null)
+            if(!user.Any())
             {
-                return Forbid();
+                return null;
             }
             else
             {
                 Session s = new Session();
                 s.UserId = user.First().UserId;
                 s.SessionGuid = Guid.NewGuid().ToString();
-                s.Timeout = DateTime.UtcNow.AddMinutes(30);
+                s.Timeout = DateTime.UtcNow.AddMinutes(100);
                 _context.sessions.Add(s);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return s.SessionGuid;
             }
         }
