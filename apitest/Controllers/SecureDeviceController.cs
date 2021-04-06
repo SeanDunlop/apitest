@@ -53,7 +53,7 @@ namespace apitest.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItemDTO>> PostDevice(Device device, string token)
+        public async Task<ActionResult<TodoItemDTO>> PostDevice([FromBody] Device device, [FromQuery]string token)
         {
             int userId = new SessionManager().isValid(_context, token);
             if (userId == 0)
